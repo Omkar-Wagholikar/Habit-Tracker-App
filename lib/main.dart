@@ -1,6 +1,7 @@
 import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:habit_monitor/features/3dGraph.dart';
 import 'package:habit_monitor/models/habitModel.dart';
 import 'package:habit_monitor/services/calculateCorr.dart';
 import 'package:habit_monitor/services/sqliteToCSVMode.dart';
@@ -70,6 +71,13 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            ElevatedButton(
+                onPressed: () async {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return Chart3D();
+                  }));
+                },
+                child: const Text("Graphs")),
             ElevatedButton(
                 onPressed: () async {
                   final directory = await getExternalStorageDirectory();
