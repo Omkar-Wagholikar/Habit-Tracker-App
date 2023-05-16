@@ -32,6 +32,7 @@ dependencies:
   csv: ^5.0.2
   vector_math: ^2.1.4
   flutter_echarts: ^2.4.0
+  flutter_cube: ^0.1.1
 
 
   
