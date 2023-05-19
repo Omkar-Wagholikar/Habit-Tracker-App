@@ -44,23 +44,19 @@ class ComputeCorrelation {
       sdMat.add(getSD(matrixColumnToArray(a, i)));
     }
 
-    var corrMat = covMat;
+    var corrMat = Array2d.fixed(a.length, a[0].length);
 
     for (int i = 0; i < a[0].length; i++) {
-      corrMat[i] = arrayDivisionToScalar(covMat[i], sdMat[i]);
-    }
-
-    corrMat = matrixTranspose(covMat);
-
-    for (int i = 0; i < a[0].length; i++) {
-      covMat[i] = arrayDivisionToScalar(covMat[i], sdMat[i]);
+      for (int j = 0; j < a[0].length; j++) {
+        corrMat[i][j] = covMat[i][j] / (sdMat[i] * sdMat[j]);
+      }
     }
 
     print("a: $a");
     print("a len: ${a.length}");
     print("dot: $dotMat");
-    print("corrMat: $corrMat");
-    print("covMat: ${covMat.toList()}");
+    print("corr: $corrMat");
+    print("covMat: $covMat");
     print("SD matrix: $sdMat");
     return 0.0;
   }
