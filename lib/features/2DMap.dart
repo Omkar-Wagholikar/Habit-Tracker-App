@@ -17,9 +17,10 @@ class _Graph2DState extends State<Graph2D> {
     Colors.green,
     Colors.lightGreen
   ];
-
+  List<int> l = List.generate(25, (index) => index % 5);
   @override
   Widget build(BuildContext context) {
+    print(l);
     return Scaffold(
         body: Center(
           child: Container(

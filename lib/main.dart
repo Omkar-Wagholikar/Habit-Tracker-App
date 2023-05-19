@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //print("Covariance is: ${ComputeCorrelation.computeCorrelation2Values()}");
+    print("Covariance is: ${ComputeCorrelation.computeCorrelation2Values()}");
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -74,11 +74,19 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             ElevatedButton(
                 onPressed: () async {
+                  ComputeCorrelation c = ComputeCorrelation();
+                  print(
+                      "Covariance is: ${ComputeCorrelation.computeCorrelation2Values()}");
+                  print("Pressed");
+                },
+                child: const Text("Covariance Test")),
+            ElevatedButton(
+                onPressed: () async {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return TestGraph();
                   }));
                 },
-                child: const Text("Cube Test")),
+                child: const Text("Heat Graph")),
             ElevatedButton(
                 onPressed: () async {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
