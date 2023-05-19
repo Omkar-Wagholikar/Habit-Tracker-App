@@ -13,10 +13,11 @@ class ComputeCorrelation {
 
   static double computeCorrelation2Values() {
     var a = Array2d([
-      Array([1.0, 2.0, 342.0]),
-      Array([2.0, 1.0, 62.0]),
-      Array([3.0, 81.0, 39.0]),
-      Array([4.0, 18.0, 29.0]),
+      Array([81, 23, 64, 16, 97]),
+      Array([3, 7, 45, 88, 11]),
+      Array([92, 56, 31, 79, 51]),
+      Array([42, 78, 33, 72, 1]),
+      Array([68, 32, 89, 63, 94])
     ]);
 
     var colSumMat = matrixSumColumns(a);
@@ -44,20 +45,33 @@ class ComputeCorrelation {
       sdMat.add(getSD(matrixColumnToArray(a, i)));
     }
 
-    var corrMat = Array2d.fixed(a.length, a[0].length);
+    var corrMat = Array2d.fixed(
+      a[0].length,
+      a.length,
+    );
 
     for (int i = 0; i < a[0].length; i++) {
-      for (int j = 0; j < a[0].length; j++) {
-        corrMat[i][j] = covMat[i][j] / (sdMat[i] * sdMat[j]);
-      }
+      corrMat[i] = arrayDivisionToScalar(covMat[i], sdMat[i]);
+    }
+    corrMat = matrixTranspose(corrMat);
+    for (int i = 0; i < a[0].length; i++) {
+      corrMat[i] = arrayDivisionToScalar(corrMat[i], sdMat[i]);
     }
 
-    print("a: $a");
-    print("a len: ${a.length}");
-    print("dot: $dotMat");
-    print("corr: $corrMat");
-    print("covMat: $covMat");
-    print("SD matrix: $sdMat");
+    List<double> indices = [];
+
+    for (int i = 0; i < a[0].length; i++) {
+      indices.addAll(corrMat[i].toList());
+      print(corrMat[i].toList());
+    }
+
+    print(indices);
+    // print("a: $a");
+    // print("a len: ${a.length}");
+    // print("dot: $dotMat");
+    // print("corr: $corrMat");
+    // print("covMat: $covMat");
+    // print("SD matrix: $sdMat");
     return 0.0;
   }
 }
