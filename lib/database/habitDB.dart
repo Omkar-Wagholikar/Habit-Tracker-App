@@ -40,12 +40,8 @@ CREATE TABLE ${t.tableTransactions} (
   ${t.HabitFields.habitName} $textType,
   ${t.HabitFields.activation} $doubleType,
   ${t.HabitFields.date} $textType,
-  ${t.HabitFields.type} $textType,
-  ${t.HabitFields.account} $textType,
-  ${t.HabitFields.category} $textType,
-  ${t.HabitFields.iconCode} $integerType,
-  ${t.HabitFields.categoryType} $textType
-  )
+  ${t.HabitFields.type} $textType
+)
 ''');
   }
 
@@ -84,7 +80,6 @@ CREATE TABLE ${t.tableTransactions} (
         v.activation,
         v.date,
         v.type,
-        v.account,
       ]);
     }
     return list;
@@ -127,54 +122,6 @@ CREATE TABLE ${t.tableTransactions} (
       return null;
     }
     return lst;
-  }
-
-  Future<List<Map<String, dynamic>>?> categoryWiseTransactions(
-      String categoryName, DateTime startDate, DateTime endDate) async {
-    final db = await instance.database;
-    List<Map<String, dynamic>> lst = [];
-
-    final dates = await db.rawQuery(
-        "SELECT DISTINCT ${t.HabitFields.date} FROM ${t.tableTransactions} ORDER BY ${t.HabitFields.date} DESC");
-    for (int i = 0; i < dates.length; i++) {
-      final transactions = await db.query(t.tableTransactions,
-          columns: t.HabitFields.values,
-          where: '${t.HabitFields.date} = ?',
-          whereArgs: [dates[i]['date']]);
-
-      List tran = [];
-      for (var i = 0; i < transactions.length; i++) {
-        t.HabitEntry temp = t.HabitEntry.fromJson(transactions[i]);
-        if (temp.category == categoryName &&
-            ((temp.date.isAfter(startDate) && temp.date.isBefore(endDate)) ||
-                temp.date == startDate ||
-                temp.date == endDate)) {
-          tran.add(temp);
-        }
-      }
-      if (tran.isNotEmpty) {
-        lst.add({
-          'date': DateTime.parse(dates[i]['date'] as String),
-          'transactions': tran,
-        });
-      }
-    }
-    if (lst.isEmpty) {
-      return null;
-    }
-    return lst;
-  }
-
-  Future<List<Map<String, Object?>>?> findCategorySum() async {
-    final db = await instance.database;
-
-    final map = await db.rawQuery(
-        "SELECT ${t.HabitFields.category}, SUM (${t.HabitFields.activation}) FROM ${t.tableTransactions} WHERE ${t.HabitFields.type} = 'Expense' GROUP BY ${t.HabitFields.category};");
-    if (map.isNotEmpty) {
-      return map;
-    } else {
-      return null;
-    }
   }
 
   Future<t.HabitEntry?> readTransaction(int id) async {
