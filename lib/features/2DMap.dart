@@ -2,8 +2,10 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:habit_monitor/themes/appColors.dart';
 
+import '../services/calculateCorr.dart';
+
 class Graph2D extends StatefulWidget {
-  // Graph2D({Key key}) : super(key: key);
+  const Graph2D({super.key});
 
   @override
   _Graph2DState createState() => _Graph2DState();
@@ -12,75 +14,113 @@ class Graph2D extends StatefulWidget {
 class _Graph2DState extends State<Graph2D> {
   List<List<Color>> graphPalette = AppColors.graphPalette;
   int index = 0;
-  List<double> l = [
-    1.0,
-    0.3202916865537976,
-    0.17999626427407764,
-    -0.5126791390432305,
-    0.7022362436632085,
-    0.3202916865537976,
-    1.0,
-    -0.48664795789851373,
-    0.1821200603868802,
-    -0.3392376228878216,
-    0.17999626427407764,
-    -0.48664795789851373,
-    1.0000000000000002,
-    -0.4557335899834292,
-    0.7727175938901186,
-    -0.5126791390432306,
-    0.18212006038688025,
-    -0.45573358998342917,
-    1.0000000000000002,
-    -0.7143383547878946,
-    0.7022362436632084,
-    -0.3392376228878216,
-    0.7727175938901186,
-    -0.7143383547878946,
-    1.0,
+  List<double> l = ComputeCorrelation.computeCorrelation2Values();
+  List<Widget> graphLabels = const [
+    Text("A"),
+    Text("B"),
+    Text("C"),
+    Text("D"),
+    Text("E"),
   ];
 
   @override
   Widget build(BuildContext context) {
     List<Color> colorList = generateIntermediateColors(
         graphPalette[index][0], graphPalette[index][1], 101);
+
     return Scaffold(
       body: Center(
-        child: Container(
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.black, width: 1),
-            borderRadius: BorderRadius.circular(10),
-            color: Colors.black,
-          ),
-          width: MediaQuery.of(context).size.width / 1.5,
-          height: MediaQuery.of(context).size.width / 1.5,
-          child: GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 5,
-            ),
-            itemCount: l.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Padding(
-                padding: const EdgeInsets.all(1.0),
-                child: Container(
-                  height: 10,
-                  width: 10,
-                  color: colorList[((l[index] + 1) * 50).round()],
-                  child: Center(child: Text('')),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  color: Colors.amber,
+                  padding: const EdgeInsets.all(10),
+                  height: MediaQuery.of(context).size.width / 1.5,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: graphLabels,
+                  ),
                 ),
-              );
-            },
-          ),
+                Container(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black, width: 1),
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.black,
+                        ),
+                        alignment: Alignment.topCenter,
+                        width: MediaQuery.of(context).size.width / 1.5,
+                        height: MediaQuery.of(context).size.width / 1.5,
+                        child: GridView.builder(
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 5,
+                          ),
+                          itemCount: l.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Padding(
+                              padding: const EdgeInsets.all(1.0),
+                              child: Container(
+                                height: 10,
+                                width: 10,
+                                color: colorList[((l[index] + 1) * 50).round()],
+                                child: Center(
+                                  child: Text(
+                                    "${((l[index] + 1) * 50).round() / 100}",
+                                    style: const TextStyle(
+                                      fontSize: 10,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            Container(
+              color: Colors.amber,
+              alignment: Alignment.centerRight,
+              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+              width: MediaQuery.of(context).size.width / 1.5,
+              child: GridView.count(
+                shrinkWrap: true,
+                crossAxisCount: 5,
+                childAspectRatio: 1.0,
+                padding: const EdgeInsets.all(4.0),
+                mainAxisSpacing: 4.0,
+                crossAxisSpacing: 4.0,
+                children: List.generate(
+                  graphLabels.length,
+                  (index) => graphLabels[index],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.refresh),
         onPressed: () {
           setState(() {
-            // Generate new colors
             index = (index + 1) % (graphPalette.length);
             colorList = generateIntermediateColors(
-                Colors.lightBlue[900]!, Colors.lightGreen, 101);
+              Colors.lightBlue[900]!,
+              Colors.lightGreen,
+              101,
+            );
           });
         },
       ),
@@ -88,7 +128,10 @@ class _Graph2DState extends State<Graph2D> {
   }
 
   static List<Color> generateIntermediateColors(
-      Color color1, Color color2, int count) {
+    Color color1,
+    Color color2,
+    int count,
+  ) {
     List<Color> colors = [];
 
     double stepR = (color2.red - color1.red) / (count - 1);
@@ -109,10 +152,10 @@ class _Graph2DState extends State<Graph2D> {
 }
 
 class TestGraph extends StatelessWidget {
-  // const TestGraph({Key key}) : super(key: key);
+  const TestGraph({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Graph2D();
+    return const Graph2D();
   }
 }

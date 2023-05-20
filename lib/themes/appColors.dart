@@ -4,6 +4,7 @@ class AppColors {
   static List<List<Color>> graphPalette = [
     [Colors.lightGreen, Colors.red],
     [Color.fromARGB(255, 67, 156, 224), Colors.lightGreen],
+    [Colors.lightGreen, Color.fromARGB(255, 67, 156, 224)],
     [Colors.lightBlue[900]!, Colors.lightGreen],
     [Colors.lightBlue[900]!, Colors.amber],
     [Color(0x6A0DAD), Color(0xD3D3D3)],

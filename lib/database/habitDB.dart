@@ -37,8 +37,8 @@ class HabitDatabase {
     await db.execute('''
 CREATE TABLE ${t.tableTransactions} (
   ${t.HabitFields.id} $idType,
-  ${t.HabitFields.title} $textType,
-  ${t.HabitFields.amount} $doubleType,
+  ${t.HabitFields.habitName} $textType,
+  ${t.HabitFields.activation} $doubleType,
   ${t.HabitFields.date} $textType,
   ${t.HabitFields.type} $textType,
   ${t.HabitFields.account} $textType,
@@ -80,8 +80,8 @@ CREATE TABLE ${t.tableTransactions} (
     List<HabitEntry>? habits = await t.readAllHabits();
     for (var v in habits!) {
       list.add([
-        v.title,
-        v.amount,
+        v.habitName,
+        v.activation,
         v.date,
         v.type,
         v.account,
@@ -169,7 +169,7 @@ CREATE TABLE ${t.tableTransactions} (
     final db = await instance.database;
 
     final map = await db.rawQuery(
-        "SELECT ${t.HabitFields.category}, SUM (${t.HabitFields.amount}) FROM ${t.tableTransactions} WHERE ${t.HabitFields.type} = 'Expense' GROUP BY ${t.HabitFields.category};");
+        "SELECT ${t.HabitFields.category}, SUM (${t.HabitFields.activation}) FROM ${t.tableTransactions} WHERE ${t.HabitFields.type} = 'Expense' GROUP BY ${t.HabitFields.category};");
     if (map.isNotEmpty) {
       return map;
     } else {

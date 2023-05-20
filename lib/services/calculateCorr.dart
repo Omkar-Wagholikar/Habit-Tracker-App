@@ -11,13 +11,13 @@ class ComputeCorrelation {
     return sqrt(temp / (a.length));
   }
 
-  static double computeCorrelation2Values() {
+  static List<double> computeCorrelation2Values() {
     var a = Array2d([
-      Array([81, 23, 64, 16, 97]),
-      Array([3, 7, 45, 88, 11]),
-      Array([92, 56, 31, 79, 51]),
-      Array([42, 78, 33, 72, 1]),
-      Array([68, 32, 89, 63, 94])
+      Array([1, 23, 64, 16, 9]),
+      Array([2, 71, 45, 88, 8]),
+      Array([3, 56, 31, 79, 7]),
+      Array([4, 78, 33, 72, 6]),
+      Array([5, 32, 89, 63, 5])
     ]);
 
     var colSumMat = matrixSumColumns(a);
@@ -62,7 +62,7 @@ class ComputeCorrelation {
 
     for (int i = 0; i < a[0].length; i++) {
       indices.addAll(corrMat[i].toList());
-      print(corrMat[i].toList());
+      // print(corrMat[i].toList());
     }
 
     print(indices);
@@ -72,6 +72,6 @@ class ComputeCorrelation {
     // print("corr: $corrMat");
     // print("covMat: $covMat");
     // print("SD matrix: $sdMat");
-    return 0.0;
+    return indices;
   }
 }

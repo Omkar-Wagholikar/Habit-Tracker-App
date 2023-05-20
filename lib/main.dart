@@ -21,7 +21,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("Covariance is: ${ComputeCorrelation.computeCorrelation2Values()}");
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -49,8 +48,8 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       HabitDatabase t = HabitDatabase.instance;
       t.insertHabit(HabitEntry(
-          title: "title",
-          amount: _counter.toDouble(),
+          habitName: "title",
+          activation: _counter.toDouble(),
           date: DateTime.now(),
           type: "type",
           account: "account",
@@ -139,9 +138,9 @@ class _MyHomePageState extends State<MyHomePage> {
             ElevatedButton(
                 onPressed: () {
                   HabitDatabase t = HabitDatabase.instance;
-                  t
-                      .createFullNestedList()
-                      .then((value) => print("List: $value"));
+                  t.createFullNestedList().then((value) => {
+                        for (var i in value!) {print(i)}
+                      });
                 },
                 child: const Text("child")),
             const Text(
