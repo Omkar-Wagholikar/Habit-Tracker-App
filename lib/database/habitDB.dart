@@ -70,7 +70,6 @@ CREATE TABLE ${t.tableTransactions} (
   }
 
   Future<List<dynamic>?> createFullNestedList() async {
-    final db = await instance.database;
     HabitDatabase t = HabitDatabase.instance;
     List<dynamic> list = [];
     List<HabitEntry>? habits = await t.readAllHabits();

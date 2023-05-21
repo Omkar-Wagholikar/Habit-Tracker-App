@@ -1,24 +1,29 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:habit_monitor/features/3dGraph.dart';
-import 'package:habit_monitor/features/2DMap.dart';
+import 'package:habit_monitor/features/Graphs/3dGraph.dart';
+import 'package:habit_monitor/features/Graphs/2DMap.dart';
 import 'package:habit_monitor/models/habitModel.dart';
-import 'package:habit_monitor/services/calculateCorr.dart';
-import 'package:habit_monitor/services/sqliteToCSVMode.dart';
+import 'package:habit_monitor/services/calculateCorrelation/calculateCorr.dart';
+import 'package:habit_monitor/services/SQLtoCSV/sqliteToCSVMode.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:workmanager/workmanager.dart';
 
 import 'database/habitDB.dart';
+import 'features/Notification/notifications.dart';
 
-void main() {
+void main() async {
+  await NotificationService.initializeNotification();
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+  static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   Widget build(BuildContext context) {
@@ -176,10 +181,66 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: insert,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          FloatingActionButton(
+            onPressed: insert,
+            tooltip: 'Increment',
+            child: const Icon(Icons.add),
+          ),
+          FloatingActionButton(
+            onPressed: () async {
+              await NotificationService.showNotification(
+                  title: "Title of the notification",
+                  body: "Body of the notification",
+                  summary: "Small Summary",
+                  notificationLayout: NotificationLayout.Inbox,
+                  actionButtons: [
+                    NotificationActionButton(
+                      key: 'SHOW_SERVICE_DETAILS',
+                      label: 'a1',
+                      actionType: ActionType.Default,
+                      autoDismissible: false,
+                    ),
+                    // NotificationActionButton(
+                    //   key: 'SHOW_SERVICE_DETAILS',
+                    //   label: 'a2',
+                    //   actionType: ActionType.Default,
+                    //   color: Colors.green,
+                    //   icon: 'resource://drawable/res_food',
+                    //   autoDismissible: false,
+                    // ),
+                    // NotificationActionButton(
+                    //   key: 'SHOW_SERVICE_DETAILS',
+                    //   label: 'a3',
+                    //   actionType: ActionType.Default,
+                    //   color: Colors.green,
+                    //   icon: 'resource://drawable/res_food',
+                    //   autoDismissible: false,
+                    // ),
+                    // NotificationActionButton(
+                    //   key: 'SHOW_SERVICE_DETAILS',
+                    //   label: 'a4',
+                    //   actionType: ActionType.Default,
+                    //   color: Colors.green,
+                    //   icon: 'resource://drawable/res_food',
+                    //   autoDismissible: false,
+                    // ),
+                    // NotificationActionButton(
+                    //   key: 'SHOW_SERVICE_DETAILS',
+                    //   label: 'a5',
+                    //   actionType: ActionType.Default,
+                    //   color: Colors.green,
+                    //   icon: 'resource://drawable/res_food',
+                    //   autoDismissible: false,
+                    // ),
+                  ]);
+            },
+            tooltip: 'Message',
+            child: const Icon(Icons.sms),
+          ),
+        ],
       ),
     );
   }

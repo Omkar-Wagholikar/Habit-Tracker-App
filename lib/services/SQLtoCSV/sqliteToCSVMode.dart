@@ -4,7 +4,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:csv/csv.dart';
 import 'package:share_plus/share_plus.dart';
 
-import '../database/habitDB.dart';
+import '../../database/habitDB.dart';
 
 class FileShare {
   Future<void> createCSV({required String name}) async {

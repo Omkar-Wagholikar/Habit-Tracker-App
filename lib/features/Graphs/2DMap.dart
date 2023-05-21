@@ -2,7 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:habit_monitor/themes/appColors.dart';
 
-import '../services/calculateCorr.dart';
+import '../../services/calculateCorrelation/calculateCorr.dart';
 
 class Graph2D extends StatefulWidget {
   const Graph2D({super.key});
