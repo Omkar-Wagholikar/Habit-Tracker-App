@@ -9,8 +9,8 @@ class HabitFields {
     type,
   ];
   static const String id = '_id';
-  static const String habitName = 'title';
-  static const String activation = 'amount';
+  static const String habitName = 'habitName';
+  static const String activation = 'activation';
   static const String date = 'date';
   static const String type = 'type';
 }

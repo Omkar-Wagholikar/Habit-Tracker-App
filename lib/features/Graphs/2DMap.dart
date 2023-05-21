@@ -14,7 +14,14 @@ class Graph2D extends StatefulWidget {
 class _Graph2DState extends State<Graph2D> {
   List<List<Color>> graphPalette = AppColors.graphPalette;
   int index = 0;
-  List<double> l = ComputeCorrelation.computeCorrelation2Values();
+  late List<double> l;
+
+  Future<void> assign() async {
+    setState(() async {
+      l = await ComputeCorrelation.computeCorrelation2Values();
+    });
+  }
+
   List<Widget> graphLabels = const [
     Text("A"),
     Text("B"),
@@ -25,6 +32,7 @@ class _Graph2DState extends State<Graph2D> {
 
   @override
   Widget build(BuildContext context) {
+    assign();
     List<Color> colorList = generateIntermediateColors(
         graphPalette[index][0], graphPalette[index][1], 101);
 

@@ -1,3 +1,5 @@
+import 'dart:ffi';
+import 'package:scidart/numdart.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import '../models/habitModel.dart' as t;
@@ -84,58 +86,37 @@ CREATE TABLE ${t.tableTransactions} (
     return list;
   }
 
-  Future<List<t.HabitEntry>?> readExpenseTransactions() async {
+  Future<void> getColumnNames() async {
     final db = await instance.database;
 
-    const orderBy = '${t.HabitFields.date} DESC';
-    final map = await db.query(t.tableTransactions,
-        orderBy: orderBy,
-        where: '${t.HabitFields.type} = ?',
-        whereArgs: ['Expense']);
+    final List<Map<String, dynamic>> columns =
+        await db.rawQuery('PRAGMA table_info(${t.tableTransactions})');
 
-    if (map.isNotEmpty) {
-      return map.map((e) => t.HabitEntry.fromJson(e)).toList();
-    } else {
-      return null;
-    }
+    final List<String> columnNames =
+        columns.map((column) => column['name'] as String).toList();
+
+    print(columnNames);
   }
 
-  Future<List<Map<String, dynamic>>?> datewiseTransactions() async {
+  Future<List<dynamic>> habitwiseTransactions(
+      {required String column, required List<String> search}) async {
     final db = await instance.database;
-    List<Map<String, dynamic>> lst = [];
-
-    final d = await db.rawQuery(
-        "SELECT DISTINCT ${t.HabitFields.date} FROM ${t.tableTransactions} ORDER BY ${t.HabitFields.date} DESC");
-    for (int i = 0; i < d.length; i++) {
-      final transactions = await db.query(t.tableTransactions,
-          columns: t.HabitFields.values,
-          where: '${t.HabitFields.date} = ?',
-          whereArgs: [d[i]['date']]);
-      lst.add({
-        'date': DateTime.parse(d[i]['date'] as String),
-        'transactions': List.generate(transactions.length,
-            (index) => t.HabitEntry.fromJson(transactions[index])),
-      });
-    }
-    if (lst.isEmpty) {
-      return null;
-    }
-    return lst;
+    final List<Map<String, dynamic>> rows = await db.query(
+        '${t.tableTransactions}',
+        where: '$column = ?',
+        whereArgs: search);
+    return rows;
   }
 
-  Future<t.HabitEntry?> readTransaction(int id) async {
+  Future<List<String>> getUniqueColumnValues(String columnName) async {
     final db = await instance.database;
+    final List<Map<String, dynamic>> result = await db
+        .rawQuery('SELECT DISTINCT $columnName FROM ${t.tableTransactions}');
 
-    final map = await db.query(t.tableTransactions,
-        columns: t.HabitFields.values,
-        where: '${t.HabitFields.id} = ?',
-        whereArgs: [id]);
+    final List<String> uniqueValues =
+        result.map((row) => row[columnName].toString()).toList();
 
-    if (map.isNotEmpty) {
-      return t.HabitEntry.fromJson(map.first);
-    } else {
-      return null;
-    }
+    return uniqueValues;
   }
 
   Future<int> update(int id, t.HabitEntry transaction) async {
@@ -161,5 +142,10 @@ CREATE TABLE ${t.tableTransactions} (
   Future close() async {
     final db = await instance.database;
     db.close();
+  }
+
+  Future deleteAllValues() async {
+    final db = await instance.database;
+    db.delete(t.tableTransactions);
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
@@ -66,8 +68,40 @@ class _MyHomePageState extends State<MyHomePage> {
   TextEditingController habitName = TextEditingController();
   TextEditingController activation = TextEditingController();
   TextEditingController type = TextEditingController();
+  void test() async {
+    // for (int i = 0; i < 25; i++) {
+    //   await HabitDatabase.instance.insertHabit(HabitEntry(
+    //     habitName: "test ${i % 5}",
+    //     activation: Random().nextDouble(),
+    //     date: DateTime.now(),
+    //     type: "${Random().nextInt(5)}",
+    //   ));
+    // }
+
+    // await HabitDatabase.instance.deleteAllValues();
+
+    // await HabitDatabase.instance.getColumnNames();
+    // List<HabitEntry>? temp = await HabitDatabase.instance.readAllHabits();
+    // temp!.forEach((element) {
+    //   print(element.toJson());
+    // });
+
+    // ComputeCorrelation computeCorrelation = ComputeCorrelation();
+    // print(await computeCorrelation.createMatrix());
+
+    // print(await HabitDatabase.instance.getUniqueColumnValues("habitname"));
+
+    // HabitDatabase.instance.habitwiseTransactions(column: 'habitname', search: [
+    //   'test 0'
+    // ]).then((value) => value.forEach((element) {
+    //       print('         ${element["activation"]}');
+    //     }));
+  }
+
   @override
   Widget build(BuildContext context) {
+    print("===========================================");
+    test();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,

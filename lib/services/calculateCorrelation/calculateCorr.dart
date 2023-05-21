@@ -1,6 +1,8 @@
 import 'dart:math';
 import 'package:scidart/numdart.dart';
 
+import '../../database/habitDB.dart';
+
 class ComputeCorrelation {
   static double getSD(Array a) {
     var meanA = mean(a);
@@ -11,14 +13,39 @@ class ComputeCorrelation {
     return sqrt(temp / (a.length));
   }
 
-  static List<double> computeCorrelation2Values() {
-    var a = Array2d([
-      Array([1, 23, 64, 16, 9]),
-      Array([2, 71, 45, 88, 8]),
-      Array([3, 56, 31, 79, 7]),
-      Array([4, 78, 33, 72, 6]),
-      Array([5, 32, 89, 63, 5])
-    ]);
+  static Future<Array2d> createMatrix() async {
+    HabitDatabase t = HabitDatabase.instance;
+    List<String> uniqValues = await t.getUniqueColumnValues("habitName");
+
+    var finMatrix = Array2d.empty();
+
+    Future<Array> getActivationforHabit({required String habit}) async {
+      var temp = Array.empty();
+      List habits =
+          await t.habitwiseTransactions(column: 'habitname', search: [habit]);
+      habits.forEach((element) {
+        // print(element["activation"]);
+        temp.add(element["activation"]);
+      });
+      return temp;
+    }
+
+    for (var element in uniqValues) {
+      finMatrix.add(await getActivationforHabit(habit: element));
+    }
+    return matrixTranspose(finMatrix);
+  }
+
+  static Future<List<double>> computeCorrelation2Values() async {
+    // var a = Array2d([
+    //   Array([1, 23, 64, 16, 9]),
+    //   Array([2, 71, 45, 88, 8]),
+    //   Array([3, 56, 31, 79, 7]),
+    //   Array([4, 78, 33, 72, 6]),
+    //   Array([5, 32, 89, 63, 5])
+    // ]);
+
+    var a = await createMatrix();
 
     var colSumMat = matrixSumColumns(a);
 
