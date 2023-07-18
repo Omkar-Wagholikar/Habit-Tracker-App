@@ -13,7 +13,7 @@ class HabitDatabase {
   Future<Database> get database async {
     if (_database != null) return _database!;
 
-    _database = await _initDB('transactions.db');
+    _database = await _initDB('habits.db');
     return _database!;
   }
 
@@ -35,13 +35,12 @@ class HabitDatabase {
     const doubleType = 'DOUBLE NOT NULL';
 
     await db.execute('''
-CREATE TABLE ${t.tableTransactions} (
+CREATE TABLE ${t.tableHabits} (
   ${t.HabitFields.id} $idType,
   ${t.HabitFields.title} $textType,
   ${t.HabitFields.amount} $doubleType,
   ${t.HabitFields.date} $textType,
   ${t.HabitFields.type} $textType,
-  ${t.HabitFields.account} $textType,
   ${t.HabitFields.category} $textType,
   ${t.HabitFields.iconCode} $integerType,
   ${t.HabitFields.categoryType} $textType
@@ -51,12 +50,12 @@ CREATE TABLE ${t.tableTransactions} (
 
   Future<void> insertHabit(t.HabitEntry transaction) async {
     final db = await instance.database;
-    await db.insert(t.tableTransactions, transaction.toJson());
+    await db.insert(t.tableHabits, transaction.toJson());
   }
 
   Future<t.HabitEntry> create(t.HabitEntry transaction) async {
     final db = await instance.database;
-    final id = await db.insert(t.tableTransactions, transaction.toJson());
+    final id = await db.insert(t.tableHabits, transaction.toJson());
     return transaction.copy(id: id);
   }
 
@@ -64,7 +63,7 @@ CREATE TABLE ${t.tableTransactions} (
     final db = await instance.database;
 
     const orderBy = '${t.HabitFields.date} DESC';
-    final map = await db.query(t.tableTransactions, orderBy: orderBy);
+    final map = await db.query(t.tableHabits, orderBy: orderBy);
 
     if (map.isNotEmpty) {
       return map.map((e) => t.HabitEntry.fromJson(e)).toList();
@@ -74,7 +73,6 @@ CREATE TABLE ${t.tableTransactions} (
   }
 
   Future<List<dynamic>?> createFullNestedList() async {
-    final db = await instance.database;
     HabitDatabase t = HabitDatabase.instance;
     List<dynamic> list = [];
     List<HabitEntry>? habits = await t.readAllHabits();
@@ -84,7 +82,6 @@ CREATE TABLE ${t.tableTransactions} (
         v.amount,
         v.date,
         v.type,
-        v.account,
       ]);
     }
     return list;
@@ -94,7 +91,7 @@ CREATE TABLE ${t.tableTransactions} (
     final db = await instance.database;
 
     const orderBy = '${t.HabitFields.date} DESC';
-    final map = await db.query(t.tableTransactions,
+    final map = await db.query(t.tableHabits,
         orderBy: orderBy,
         where: '${t.HabitFields.type} = ?',
         whereArgs: ['Expense']);
@@ -111,9 +108,9 @@ CREATE TABLE ${t.tableTransactions} (
     List<Map<String, dynamic>> lst = [];
 
     final d = await db.rawQuery(
-        "SELECT DISTINCT ${t.HabitFields.date} FROM ${t.tableTransactions} ORDER BY ${t.HabitFields.date} DESC");
+        "SELECT DISTINCT ${t.HabitFields.date} FROM ${t.tableHabits} ORDER BY ${t.HabitFields.date} DESC");
     for (int i = 0; i < d.length; i++) {
-      final transactions = await db.query(t.tableTransactions,
+      final transactions = await db.query(t.tableHabits,
           columns: t.HabitFields.values,
           where: '${t.HabitFields.date} = ?',
           whereArgs: [d[i]['date']]);
@@ -135,9 +132,9 @@ CREATE TABLE ${t.tableTransactions} (
     List<Map<String, dynamic>> lst = [];
 
     final dates = await db.rawQuery(
-        "SELECT DISTINCT ${t.HabitFields.date} FROM ${t.tableTransactions} ORDER BY ${t.HabitFields.date} DESC");
+        "SELECT DISTINCT ${t.HabitFields.date} FROM ${t.tableHabits} ORDER BY ${t.HabitFields.date} DESC");
     for (int i = 0; i < dates.length; i++) {
-      final transactions = await db.query(t.tableTransactions,
+      final transactions = await db.query(t.tableHabits,
           columns: t.HabitFields.values,
           where: '${t.HabitFields.date} = ?',
           whereArgs: [dates[i]['date']]);
@@ -169,7 +166,7 @@ CREATE TABLE ${t.tableTransactions} (
     final db = await instance.database;
 
     final map = await db.rawQuery(
-        "SELECT ${t.HabitFields.category}, SUM (${t.HabitFields.amount}) FROM ${t.tableTransactions} WHERE ${t.HabitFields.type} = 'Expense' GROUP BY ${t.HabitFields.category};");
+        "SELECT ${t.HabitFields.category}, SUM (${t.HabitFields.amount}) FROM ${t.tableHabits} WHERE ${t.HabitFields.type} = 'Expense' GROUP BY ${t.HabitFields.category};");
     if (map.isNotEmpty) {
       return map;
     } else {
@@ -180,7 +177,7 @@ CREATE TABLE ${t.tableTransactions} (
   Future<t.HabitEntry?> readTransaction(int id) async {
     final db = await instance.database;
 
-    final map = await db.query(t.tableTransactions,
+    final map = await db.query(t.tableHabits,
         columns: t.HabitFields.values,
         where: '${t.HabitFields.id} = ?',
         whereArgs: [id]);
@@ -195,7 +192,7 @@ CREATE TABLE ${t.tableTransactions} (
   Future<int> update(int id, t.HabitEntry transaction) async {
     final db = await instance.database;
     return db.update(
-      t.tableTransactions,
+      t.tableHabits,
       transaction.toJson(),
       where: '${t.HabitFields.id} = ?',
       whereArgs: [id],
@@ -206,7 +203,7 @@ CREATE TABLE ${t.tableTransactions} (
     final db = await instance.database;
 
     return await db.delete(
-      t.tableTransactions,
+      t.tableHabits,
       where: '${t.HabitFields.id} = ?',
       whereArgs: [id],
     );

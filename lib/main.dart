@@ -1,8 +1,6 @@
 import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:habit_monitor/models/habitModel.dart';
-import 'package:habit_monitor/services/calculateCorr.dart';
 import 'package:habit_monitor/services/sqliteToCSVMode.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
@@ -19,7 +17,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //print("Covariance is: ${ComputeCorrelation.computeCorrelation2Values()}");
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -51,7 +48,6 @@ class _MyHomePageState extends State<MyHomePage> {
           amount: _counter.toDouble(),
           date: DateTime.now(),
           type: "type",
-          account: "account",
           category: "category",
           iconCode: 1,
           categoryType: "categoryType"));
@@ -107,7 +103,6 @@ class _MyHomePageState extends State<MyHomePage> {
             ElevatedButton(
                 onPressed: () async {
                   // Share.shareFiles(['${directory.path}/image.jpg'], text: 'Great picture');
-                  HabitDatabase t = HabitDatabase.instance;
                   await getExternalStorageDirectory().then(
                       (value) => print("External Storage Directory: $value"));
                 },
