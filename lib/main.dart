@@ -1,10 +1,7 @@
-import 'dart:math';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:habit_monitor/features/Graphs/3dGraph.dart';
 import 'package:habit_monitor/features/Graphs/2DMap.dart';
 import 'package:habit_monitor/models/habitModel.dart';
@@ -13,13 +10,30 @@ import 'package:habit_monitor/services/SQLtoCSV/sqliteToCSVMode.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:workmanager/workmanager.dart';
 
 import 'database/habitDB.dart';
 import 'features/Notification/notifications.dart';
 
 void main() async {
-  await NotificationService.initializeNotification();
+  // await NotificationService.initializeNotification();
+  // Aweso
+  AwesomeNotifications()
+      .initialize('resource://drawable/res_notification_icon', [
+    NotificationChannel(
+      channelKey: 'new_sms_detected',
+      channelName: 'New Transaction Detected',
+      channelDescription:
+          'Notification which is shown when a new transaction is detected.',
+      defaultColor: const Color.fromRGBO(122, 195, 168, 1),
+    ),
+    NotificationChannel(
+      channelKey: 'daily_reminder',
+      channelName: 'Daily Reminders',
+      channelDescription: 'Daily reminder notifications.',
+      defaultColor: const Color.fromRGBO(122, 195, 168, 1),
+    ),
+  ]);
+  // AwesomeNotifications().
   runApp(const MyApp());
 }
 
@@ -81,6 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // await HabitDatabase.instance.deleteAllValues();
 
     // await HabitDatabase.instance.getColumnNames();
+
     // List<HabitEntry>? temp = await HabitDatabase.instance.readAllHabits();
     // temp!.forEach((element) {
     //   print(element.toJson());
@@ -114,7 +129,6 @@ class _MyHomePageState extends State<MyHomePage> {
             children: <Widget>[
               ElevatedButton(
                   onPressed: () async {
-                    ComputeCorrelation c = ComputeCorrelation();
                     print(
                         "Covariance is: ${ComputeCorrelation.computeCorrelation2Values()}");
                     print("Pressed");
@@ -173,7 +187,6 @@ class _MyHomePageState extends State<MyHomePage> {
               ElevatedButton(
                   onPressed: () async {
                     // Share.shareFiles(['${directory.path}/image.jpg'], text: 'Great picture');
-                    HabitDatabase t = HabitDatabase.instance;
                     await getExternalStorageDirectory().then(
                         (value) => print("External Storage Directory: $value"));
                   },
@@ -229,30 +242,37 @@ class _MyHomePageState extends State<MyHomePage> {
                   title: "Title of the notification",
                   body: "Body of the notification",
                   summary: "Small Summary",
-                  notificationLayout: NotificationLayout.Inbox,
+                  notificationLayout: NotificationLayout.MediaPlayer,
+                  payload: {
+                    "a": "!",
+                    "b": "1",
+                    "c": "2"
+                  },
                   actionButtons: [
                     NotificationActionButton(
                       key: 'SHOW_SERVICE_DETAILS',
-                      label: 'a1',
+                      label: 'a2',
                       actionType: ActionType.Default,
+                      color: Colors.green,
+                      icon: 'resource://drawable/res_food',
                       autoDismissible: false,
                     ),
-                    // NotificationActionButton(
-                    //   key: 'SHOW_SERVICE_DETAILS',
-                    //   label: 'a2',
-                    //   actionType: ActionType.Default,
-                    //   color: Colors.green,
-                    //   icon: 'resource://drawable/res_food',
-                    //   autoDismissible: false,
-                    // ),
-                    // NotificationActionButton(
-                    //   key: 'SHOW_SERVICE_DETAILS',
-                    //   label: 'a3',
-                    //   actionType: ActionType.Default,
-                    //   color: Colors.green,
-                    //   icon: 'resource://drawable/res_food',
-                    //   autoDismissible: false,
-                    // ),
+                    NotificationActionButton(
+                      key: 'SHOW_SERVICE_DETAILS',
+                      label: 'a2',
+                      actionType: ActionType.Default,
+                      color: Colors.green,
+                      icon: 'resource://drawable/res_food',
+                      autoDismissible: false,
+                    ),
+                    NotificationActionButton(
+                      key: 'SHOW_SERVICE_DETAILS',
+                      label: 'a3',
+                      actionType: ActionType.Default,
+                      color: Colors.green,
+                      icon: 'resource://drawable/res_food',
+                      autoDismissible: false,
+                    ),
                     // NotificationActionButton(
                     //   key: 'SHOW_SERVICE_DETAILS',
                     //   label: 'a4',

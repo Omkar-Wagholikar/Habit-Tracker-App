@@ -1,5 +1,3 @@
-import 'dart:ffi';
-import 'package:scidart/numdart.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import '../models/habitModel.dart' as t;
@@ -32,7 +30,6 @@ class HabitDatabase {
 
   Future _createDB(Database db, int version) async {
     const idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
-    const integerType = 'INTEGER NOT NULL';
     const textType = 'TEXT NOT NULL';
     const doubleType = 'DOUBLE NOT NULL';
 

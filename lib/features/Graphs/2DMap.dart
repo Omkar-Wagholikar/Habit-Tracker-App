@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:habit_monitor/themes/appColors.dart';
 
@@ -33,8 +32,8 @@ class _Graph2DState extends State<Graph2D> {
   @override
   Widget build(BuildContext context) {
     assign();
-    List<Color> colorList = generateIntermediateColors(
-        graphPalette[index][0], graphPalette[index][1], 101);
+    List<Color> colorList = generateIntermediateColors2(
+        Colors.lightGreen, Colors.amber, Colors.red, 101);
 
     return Scaffold(
       body: Center(
@@ -150,6 +149,43 @@ class _Graph2DState extends State<Graph2D> {
       int red = (color1.red + stepR * i).round();
       int green = (color1.green + stepG * i).round();
       int blue = (color1.blue + stepB * i).round();
+
+      Color color = Color.fromARGB(255, red, green, blue);
+      colors.add(color);
+    }
+
+    return colors;
+  }
+
+  static List<Color> generateIntermediateColors2(
+    Color color1,
+    Color color2,
+    Color color3,
+    int count,
+  ) {
+    List<Color> colors = [];
+
+    double stepR1 = (color2.red - color1.red) / (count / 2 - 1);
+    double stepG1 = (color2.green - color1.green) / (count / 2 - 1);
+    double stepB1 = (color2.blue - color1.blue) / (count / 2 - 1);
+
+    double stepR2 = (color3.red - color2.red) / (count / 2 - 1);
+    double stepG2 = (color3.green - color2.green) / (count / 2 - 1);
+    double stepB2 = (color3.blue - color2.blue) / (count / 2 - 1);
+
+    for (int i = 0; i < count / 2; i++) {
+      int red = (color1.red + stepR1 * i).round();
+      int green = (color1.green + stepG1 * i).round();
+      int blue = (color1.blue + stepB1 * i).round();
+
+      Color color = Color.fromARGB(255, red, green, blue);
+      colors.add(color);
+    }
+
+    for (int i = 0; i <= count / 2; i++) {
+      int red = (color2.red + stepR2 * i).round();
+      int green = (color2.green + stepG2 * i).round();
+      int blue = (color2.blue + stepB2 * i).round();
 
       Color color = Color.fromARGB(255, red, green, blue);
       colors.add(color);
